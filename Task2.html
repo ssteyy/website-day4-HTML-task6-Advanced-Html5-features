@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Offline Webpage Example</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Welcome to My Offline Webpage</h1>
+    <p>This webpage is designed to demonstrate how to use Service Workers to make it available offline. You can still access this content even without an internet connection!</p>
+
+    <script>
+        // Service Worker registration
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('data:text/javascript;charset=utf-8,' + encodeURIComponent(`
+                    const CACHE_NAME = 'v1';
+                    const CACHE_ASSETS = [
+                        '/',
+                        'data:text/html;charset=utf-8,' + encodeURIComponent(\`${document.documentElement.outerHTML}\`)
+                    ];
+
+                    self.addEventListener('install', (event) => {
+                        event.waitUntil(
+                            caches.open(CACHE_NAME)
+                                .then((cache) => {
+                                    console.log('Caching all assets');
+                                    return cache.addAll(CACHE_ASSETS);
+                                })
+                        );
+                    });
+
+                    self.addEventListener('fetch', (event) => {
+                        event.respondWith(
+                            caches.match(event.request)
+                                .then((response) => {
+                                    return response || fetch(event.request);
+                                })
+                        );
+                    });
+                `))
+                .then((registration) => {
+                    console.log('Service Worker registered with scope:', registration.scope);
+                })
+                .catch((error) => {
+                    console.log('Service Worker registration failed:', error);
+                });
+            });
+        }
+    </script>
+
+</body>
+</html>

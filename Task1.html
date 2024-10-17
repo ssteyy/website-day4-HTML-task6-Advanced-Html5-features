@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Preferences with Local Storage</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            transition: background-color 0.5s; /* Smooth transition for background color */
+        }
+
+        h2 {
+            margin: 0;
+            padding: 10px 0;
+        }
+
+        label {
+            margin-right: 10px;
+        }
+
+        select {
+            padding: 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Select Your Theme Color</h2>
+    <label for="colorPicker">Choose a color:</label>
+    <select id="colorPicker">
+        <option value="#ffffff">White</option>
+        <option value="#f4f4f9">Light Gray</option>
+        <option value="#ffcccb">Light Red</option>
+        <option value="#d1e7dd">Light Green</option>
+        <option value="#cfe2ff">Light Blue</option>
+        <option value="#e2d1f2">Light Purple</option>
+    </select>
+
+    <script>
+        // Function to set the background color based on user selection
+        function setBackgroundColor(color) {
+            document.body.style.backgroundColor = color;
+            localStorage.setItem('themeColor', color); // Save the selected color to localStorage
+        }
+
+        // Check localStorage for a saved color
+        const savedColor = localStorage.getItem('themeColor');
+        if (savedColor) {
+            setBackgroundColor(savedColor); // Apply the saved color if it exists
+            document.getElementById('colorPicker').value = savedColor; // Set the select option to saved color
+        }
+
+        // Event listener for the color selection
+        document.getElementById('colorPicker').addEventListener('change', (event) => {
+            setBackgroundColor(event.target.value); // Update background color on selection
+        });
+    </script>
+
+</body>
+</html>
